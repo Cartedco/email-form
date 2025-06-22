@@ -1,0 +1,196 @@
+<!-- Minimalist black & white landing page integrated with Mailchimp -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Coming Soon</title>
+
+    <style>
+      :root {
+        --white: #ffffff;
+        --black: #000000;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        background: var(--black);
+        color: var(--white);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        text-align: center;
+      }
+
+      .wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+        width: 90%;
+        max-width: 480px;
+      }
+
+      .logo {
+        width: 140px;
+        height: auto;
+        user-select: none;
+      }
+
+      .tagline,
+      .thankyou {
+        line-height: 1.5;
+        font-size: 1rem;
+      }
+
+      .thankyou {
+        display: none;
+      }
+
+      form {
+        display: flex;
+        width: 100%;
+        border: 1px solid var(--white);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      input[type='email'] {
+        flex: 1 1 auto;
+        padding: 0.9rem 1rem;
+        background: transparent;
+        border: none;
+        color: var(--white);
+        font-size: 1rem;
+      }
+
+      input::placeholder {
+        color: #aaaaaa;
+      }
+
+      button {
+        background: var(--white);
+        color: var(--black);
+        border: none;
+        padding: 0.9rem 1.3rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.2s ease;
+      }
+
+      button:hover {
+        background: #e6e6e6;
+      }
+
+      .social {
+        display: flex;
+        gap: 1.5rem;
+        font-size: 0.95rem;
+      }
+
+      .social a {
+        color: var(--white);
+        text-decoration: none;
+        position: relative;
+      }
+
+      .social a::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -2px;
+        width: 100%;
+        height: 1px;
+        background: var(--white);
+        opacity: 0;
+        transition: opacity 0.2s ease;
+      }
+
+      .social a:hover::after {
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <!-- Brand logo: change src to your logo file name -->
+      <img src="logo.png" alt="Brand logo" class="logo" draggable="false" />
+
+      <p class="tagline">
+        Don’t worry, we won’t flood your inbox — submit your email to get
+        exclusive founder discounts and be the first to hear when we launch!
+      </p>
+
+      <!-- Mailchimp integrated form -->
+      <form
+        id="signupForm"
+        action="https://gmail.us11.list-manage.com/subscribe/post?u=af668386182e2cd637b216ca3&amp;id=67d72f886b&amp;f_id=00cd93e0f0"
+        method="POST"
+        autocomplete="off"
+      >
+        <input
+          type="email"
+          name="EMAIL"
+          placeholder="Your email address"
+          required
+        />
+        <button type="submit">Notify Me</button>
+
+        <!-- Honeypot (anti‑bot) field required by Mailchimp -->
+        <div style="position: absolute; left: -5000px" aria-hidden="true">
+          <input
+            type="text"
+            name="b_af668386182e2cd637b216ca3_67d72f886b"
+            tabindex="-1"
+            value=""
+          />
+        </div>
+      </form>
+
+      <p id="thankyou" class="thankyou">Thanks — Coming Soon</p>
+
+      <div class="social">
+        <a href="#" target="_blank" rel="noopener">Instagram</a>
+        <a href="#" target="_blank" rel="noopener">Twitter</a>
+        <a href="#" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+
+    <script>
+      const form = document.getElementById('signupForm');
+      const thankYouMsg = document.getElementById('thankyou');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+
+        try {
+          // Mailchimp does not send CORS headers, so we use no‑cors mode.
+          await fetch(form.action, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: formData,
+          });
+
+          // Hide form & show thank‑you message
+          form.style.display = 'none';
+          thankYouMsg.style.display = 'block';
+        } catch (err) {
+          // Fallback: still hide form to avoid duplicate attempts
+          form.style.display = 'none';
+          thankYouMsg.textContent = 'Oops, try again later';
+          thankYouMsg.style.display = 'block';
+        }
+      });
+    </script>
+  </body>
+</html>
